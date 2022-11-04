@@ -59,6 +59,28 @@ void inserirNode(node **raiz, contato c) {
   inserirNodeAux(raiz, c);
 }
 
+// recursivamente percorre a árvore p/ encontar o node a ser removido
+void removerNode(node **raiz, char *nome) {
+  if (*raiz == NULL) return;
+
+  int cmp = strcmp(nome, (*raiz)->contato.nome);
+
+  if (cmp == 0) { // caso raiz é o contato a ser removido
+    printNode(*raiz);
+
+    // caso node a ser removido é um node folha
+    // if ( (*raiz)->esq == NULL && (*raiz)->dir == NULL ) {
+    //   printf("é folha\n");     
+    // } else {
+    //   printf("não é folha\n");
+    // }
+
+    return;
+  }
+
+  removerNode(cmp < 0 ? &(*raiz)->esq : &(*raiz)->dir, nome);
+}
+
 // recursivamente percorre a árvore em pós-ordem p/ deletar todos os nodes
 void destruirArvoreAux(node *raiz) {
   if (raiz == NULL) return;
@@ -79,7 +101,7 @@ int main() {
   contato harry = { "Harry", "7777-7777" };
   contato hermione = { "Hermione Granger", "1234-5678" };
   contato ron = { "Ron", "0000-0000" };
-  contato dumbledore = { "Alvus Dumbledore", "1212-1212" };
+  contato dumbledore = { "Albus Dumbledore", "1212-1212" };
   contato snape = { "Severus Snape", "9669-6996" };
   contato luna = { "Luna", "7981-6134" };
 
@@ -92,6 +114,7 @@ int main() {
   inserirNode(&raiz, ron);
   inserirNode(&raiz, harry);
   inserirNode(&raiz, snape);
+  inserirNode(&raiz, dumbledore);
 
   printNode(raiz);
   printNode(raiz->esq);
@@ -99,8 +122,11 @@ int main() {
   printNode(raiz->dir);
   printNode(raiz->dir->dir);
 
-  destruirArvore(&raiz);
-  printNode(raiz);
+  printf("\n");
+  removerNode(&raiz, "Severus Snape");
+
+  // destruirArvore(&raiz);
+  // printNode(raiz);
 
   return 0;
 }
