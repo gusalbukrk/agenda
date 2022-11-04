@@ -31,7 +31,8 @@ void criaNode(node **ref, contato c) {
   (*ref)->dir = NULL;
 }
 
-void inserirNodeRecursiva(node **raiz, contato c) {
+// recursivamente percorre a árvore p/ encontrar a folha em que adicionar o novo contato
+void inserirNodeAux(node **raiz, contato c) {
   // n é o endereço do node da esquerda ou da direita
   // depende da direção em que o novo contato deve ser inserido
   node **n = strcmp(c.nome, (*raiz)->contato.nome) < 0 ? &((*raiz)->esq) : &((*raiz)->dir);
@@ -39,7 +40,7 @@ void inserirNodeRecursiva(node **raiz, contato c) {
   // caso node n não esteja vazio
   // use recursão para executar essa função novamente dessa vez usando n como raiz
   if (*n != NULL) {
-    inserirNodeRecursiva(n, c);
+    inserirNodeAux(n, c);
     return;
   }
 
@@ -55,8 +56,23 @@ void inserirNode(node **raiz, contato c) {
   }
 
   // caso a árvore já possua nodes
-  // vasculhe a árvore recursivamente até encontrar a folha em que adicionar o novo contato
-  inserirNodeRecursiva(raiz, c);
+  inserirNodeAux(raiz, c);
+}
+
+// recursivamente percorre a árvore em pós-ordem p/ deletar todos os nodes
+void destruirArvoreAux(node *raiz) {
+  if (raiz == NULL) return;
+
+  destruirArvoreAux(raiz->esq);
+  destruirArvoreAux(raiz->dir);
+  free(raiz);
+}
+
+void destruirArvore(node **raiz) {
+  destruirArvoreAux(*raiz);
+  
+  // atribua NULL para a raiz para que não haja nenhuma variável apontado para os nodes deletados
+  *raiz = NULL;
 }
 
 int main() {
@@ -82,6 +98,9 @@ int main() {
   printNode(raiz->esq->esq);
   printNode(raiz->dir);
   printNode(raiz->dir->dir);
+
+  destruirArvore(&raiz);
+  printNode(raiz);
 
   return 0;
 }
