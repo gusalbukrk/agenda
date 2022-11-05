@@ -59,10 +59,10 @@ void inserirNode(node **raiz, contato c) {
   inserirNodeAux(raiz, c);
 }
 
-node *retornarDescendenteMaisADireita(node *raiz) {
-  if (raiz->dir == NULL) return raiz;
+node **retornarDescendenteMaisADireita(node **raiz) {
+  if ((*raiz)->dir == NULL) return raiz;
 
-  return retornarDescendenteMaisADireita(raiz->dir);
+  return retornarDescendenteMaisADireita(&(*raiz)->dir);
 }
 
 // recursivamente percorre a árvore p/ encontar o node a ser removido
@@ -84,16 +84,11 @@ void removerNode(node **raiz, char *nome) {
     // - o node mais à direita da sub-árvore do filho da esquerda
     // - o node mais à esquerda da sub-árvore do filho da direita
     } else if ( (*raiz)->esq != NULL && (*raiz)->dir != NULL ) {
-      node *n = retornarDescendenteMaisADireita((*raiz)->esq);
+      node **n = retornarDescendenteMaisADireita(&(*raiz)->esq);
 
-      // free(*raiz);
-      // *raiz = n;
-
-      // (*raiz)->contato = n->contato;
-
-      node *tmp = *raiz;
-
-      *raiz = n;
+      node *tmp = *raiz; // salva raiz em uma variável temporária
+      *raiz = *n; // substitui raiz por o descendente mais à direita do seu filho esquerdo
+      *n = NULL; // caso contrário a nova raiz ainda será filho do seu antigo pai
 
       if ( *raiz != tmp->esq ) {
         printf("!!! esq\n");
@@ -191,27 +186,12 @@ int main() {
 
   printf("\n");
 
-  printNode(raiz);
-  printNode(raiz->esq);
-  node *r = raiz->esq;
-  removerNode(&raiz, "Hermione Granger");
-  printNode(raiz);
-  printNode(raiz->esq);
-  printNode(r);
-
-  printf("\n");
-  printNode(raiz);
-  printNode(raiz->esq);
-  printNode(raiz->esq->esq);
-  printNode(raiz->esq->dir);
-  printNode(raiz->esq->esq->esq);
-  printNode(raiz->dir);
-  printNode(raiz->dir->dir);
-
   // printNode(raiz);
-  // node *r = raiz;
-  // removerNode(&raiz, "Luna");
+  // printNode(raiz->esq);
+  // node *r = raiz->esq;
+  // removerNode(&raiz, "Hermione Granger");
   // printNode(raiz);
+  // printNode(raiz->esq);
   // printNode(r);
 
   // printf("\n");
@@ -222,6 +202,21 @@ int main() {
   // printNode(raiz->esq->esq->esq);
   // printNode(raiz->dir);
   // printNode(raiz->dir->dir);
+
+  printNode(raiz);
+  node *r = raiz;
+  removerNode(&raiz, "Luna");
+  printNode(raiz);
+  printNode(r);
+
+  printf("\n");
+  printNode(raiz);
+  printNode(raiz->esq);
+  printNode(raiz->esq->esq);
+  printNode(raiz->esq->dir);
+  printNode(raiz->esq->esq->esq);
+  printNode(raiz->dir);
+  printNode(raiz->dir->dir);
 
   return 0;
 }
