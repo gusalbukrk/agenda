@@ -59,6 +59,12 @@ void inserirNode(node **raiz, contato c) {
   inserirNodeAux(raiz, c);
 }
 
+node *retornarDescendenteMaisADireita(node *raiz) {
+  if (raiz->dir == NULL) return raiz;
+
+  return retornarDescendenteMaisADireita(raiz->dir);
+}
+
 // recursivamente percorre a árvore p/ encontar o node a ser removido
 // caso raiz.contato.nome é igual a nome, raiz será removida
 void removerNode(node **raiz, char *nome) {
@@ -73,12 +79,34 @@ void removerNode(node **raiz, char *nome) {
       free(*raiz);
       *raiz = NULL;
 
-    // caso o node a ser removido possua 2 filhos
+    // caso node a ser removido possua 2 filhos
     // substitua-o por o seu node predecessor ou sucessor em ordem, ou seja:
     // - o node mais à direita da sub-árvore do filho da esquerda
     // - o node mais à esquerda da sub-árvore do filho da direita
     } else if ( (*raiz)->esq != NULL && (*raiz)->dir != NULL ) {
+      node *n = retornarDescendenteMaisADireita((*raiz)->esq);
 
+      // free(*raiz);
+      // *raiz = n;
+
+      // (*raiz)->contato = n->contato;
+
+      node *tmp = *raiz;
+
+      *raiz = n;
+
+      if ( *raiz != tmp->esq ) {
+        printf("!!! esq\n");
+        (*raiz)->esq = tmp->esq;
+      }
+
+      if ( *raiz != tmp->dir ) {
+        printf("!!! dir\n");
+        (*raiz)->dir = tmp->dir;
+      }
+
+      free(tmp);
+      tmp = NULL;
 
     // caso node a ser removido possua apenas um filho — esq ou dir
     // substitua o node a ser removido por o seu único filho
@@ -118,6 +146,7 @@ int main() {
   contato dumbledore = { "Albus Dumbledore", "1212-1212" };
   contato snape = { "Severus Snape", "9669-6996" };
   contato luna = { "Luna", "7981-6134" };
+  contato hogwarts = { "Hogwarts School of Magic", "+44 1234-4321" };
 
   node *raiz = NULL;
 
@@ -129,10 +158,13 @@ int main() {
   inserirNode(&raiz, harry);
   inserirNode(&raiz, snape);
   inserirNode(&raiz, dumbledore);
+  inserirNode(&raiz, hogwarts);
 
   printNode(raiz);
   printNode(raiz->esq);
   printNode(raiz->esq->esq);
+  printNode(raiz->esq->dir);
+  printNode(raiz->esq->esq->esq);
   printNode(raiz->dir);
   printNode(raiz->dir->dir);
 
@@ -143,19 +175,53 @@ int main() {
   // printNode(raiz->dir);
   // printNode(raiz->dir->dir);
 
-  printf("\n");
+  // printf("\n");
 
-  printNode(raiz);
-  node *d = raiz->dir;
-  printNode(d);
-  printNode(raiz->dir->dir);
-  removerNode(&(raiz->dir), "Ron");
-  printNode(raiz);
-  printNode(raiz->dir);
-  printNode(d);
+  // printNode(raiz);
+  // node *d = raiz->dir;
+  // printNode(d);
+  // printNode(raiz->dir->dir);
+  // removerNode(&(raiz->dir), "Ron");
+  // printNode(raiz);
+  // printNode(raiz->dir);
+  // printNode(d);
 
   // destruirArvore(&raiz);
   // printNode(raiz);
+
+  printf("\n");
+
+  printNode(raiz);
+  printNode(raiz->esq);
+  node *r = raiz->esq;
+  removerNode(&raiz, "Hermione Granger");
+  printNode(raiz);
+  printNode(raiz->esq);
+  printNode(r);
+
+  printf("\n");
+  printNode(raiz);
+  printNode(raiz->esq);
+  printNode(raiz->esq->esq);
+  printNode(raiz->esq->dir);
+  printNode(raiz->esq->esq->esq);
+  printNode(raiz->dir);
+  printNode(raiz->dir->dir);
+
+  // printNode(raiz);
+  // node *r = raiz;
+  // removerNode(&raiz, "Luna");
+  // printNode(raiz);
+  // printNode(r);
+
+  // printf("\n");
+  // printNode(raiz);
+  // printNode(raiz->esq);
+  // printNode(raiz->esq->esq);
+  // printNode(raiz->esq->dir);
+  // printNode(raiz->esq->esq->esq);
+  // printNode(raiz->dir);
+  // printNode(raiz->dir->dir);
 
   return 0;
 }
