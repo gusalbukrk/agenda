@@ -60,20 +60,34 @@ void inserirNode(node **raiz, contato c) {
 }
 
 // recursivamente percorre a árvore p/ encontar o node a ser removido
+// caso raiz.contato.nome é igual a nome, raiz será removida
 void removerNode(node **raiz, char *nome) {
   if (*raiz == NULL) return;
 
   int cmp = strcmp(nome, (*raiz)->contato.nome);
 
   if (cmp == 0) { // caso raiz é o contato a ser removido
-    printNode(*raiz);
 
-    // caso node a ser removido é um node folha
-    // if ( (*raiz)->esq == NULL && (*raiz)->dir == NULL ) {
-    //   printf("é folha\n");     
-    // } else {
-    //   printf("não é folha\n");
-    // }
+    // caso node a ser removido é um node folha, simplesmente remova-o
+    if ( (*raiz)->esq == NULL && (*raiz)->dir == NULL ) {
+      free(*raiz);
+      *raiz = NULL;
+
+    // caso o node a ser removido possua 2 filhos
+    // substitua-o por o seu node predecessor ou sucessor em ordem, ou seja:
+    // - o node mais à direita da sub-árvore do filho da esquerda
+    // - o node mais à esquerda da sub-árvore do filho da direita
+    } else if ( (*raiz)->esq != NULL && (*raiz)->dir != NULL ) {
+
+
+    // caso node a ser removido possua apenas um filho — esq ou dir
+    // substitua o node a ser removido por o seu único filho
+    } else {
+      node **child = (*raiz)->esq != NULL ? &(*raiz)->esq : &(*raiz)->dir;
+
+      free(*raiz);
+      *raiz = *child;
+    }
 
     return;
   }
@@ -122,8 +136,23 @@ int main() {
   printNode(raiz->dir);
   printNode(raiz->dir->dir);
 
+  // printf("\n");
+  // printNode(raiz->dir);
+  // printNode(raiz->dir->dir);
+  // removerNode(&raiz, "Severus Snape");
+  // printNode(raiz->dir);
+  // printNode(raiz->dir->dir);
+
   printf("\n");
-  removerNode(&raiz, "Severus Snape");
+
+  printNode(raiz);
+  node *d = raiz->dir;
+  printNode(d);
+  printNode(raiz->dir->dir);
+  removerNode(&(raiz->dir), "Ron");
+  printNode(raiz);
+  printNode(raiz->dir);
+  printNode(d);
 
   // destruirArvore(&raiz);
   // printNode(raiz);
