@@ -14,7 +14,7 @@ typedef struct Node {
   struct Node *dir;
 } node;
 
-void printNode(node *n) {
+void imprimirNode(node *n) {
   if (n == NULL) {
     printf("(nil)\n");
     return;
@@ -24,16 +24,16 @@ void printNode(node *n) {
 }
 
 // imprime nodes em ordem
-void printArvore(node *raiz) {
+void imprimirArvore(node *raiz) {
   if (raiz == NULL) return;
 
-  printArvore(raiz->esq);
-  printNode(raiz);
+  imprimirArvore(raiz->esq);
+  imprimirNode(raiz);
   // printf("%s: %s\n", raiz->contato.nome, raiz->contato.telefone);
-  printArvore(raiz->dir);
+  imprimirArvore(raiz->dir);
 }
 
-void criaNode(node **ref, contato c) {
+void criarNode(node **ref, contato c) {
   *ref = malloc(sizeof(node));
 
   (*ref)->contato = c;
@@ -41,7 +41,6 @@ void criaNode(node **ref, contato c) {
   (*ref)->dir = NULL;
 }
 
-// recursivamente percorre a árvore p/ encontrar a folha em que adicionar o novo contato
 void inserirNodeAux(node **raiz, contato c) {
   // n é o endereço do node da esquerda ou da direita
   // depende da direção em que o novo contato deve ser inserido
@@ -55,13 +54,14 @@ void inserirNodeAux(node **raiz, contato c) {
   }
 
   // caso node n esteja vazio, insira o novo contato
-  criaNode(n, c);
+  criarNode(n, c);
 }
 
+// recursivamente percorre a árvore p/ encontrar a folha em que adicionar o novo contato
 void inserirNode(node **raiz, contato c) {
   // caso a árvore esteja vazia, adicione o primeiro elemento
   if ( *raiz == NULL ) { 
-    criaNode(raiz, c);
+    criarNode(raiz, c);
     return;
   }
 
@@ -76,7 +76,6 @@ node **retornarDescendenteMaisADireita(node **raiz) {
 }
 
 // recursivamente percorre a árvore p/ encontar o node a ser removido
-// caso raiz.contato.nome é igual a nome, raiz será removida
 void removerNode(node **raiz, char *nome) {
   if (*raiz == NULL) return;
 
@@ -129,7 +128,23 @@ void removerNode(node **raiz, char *nome) {
   removerNode(cmp < 0 ? &(*raiz)->esq : &(*raiz)->dir, nome);
 }
 
-// recursivamente percorre a árvore em pós-ordem p/ deletar todos os nodes
+// recursivamente percorre a árvore p/ encontrar o contato desejado
+node *procurarNode(node *raiz, char *nome) {
+  if (raiz == NULL) return NULL;
+
+  int cmp = strcmp(nome, raiz->contato.nome);
+
+  if ( cmp == 0 ) return raiz;
+  return procurarNode(cmp < 0 ? raiz->esq : raiz->dir, nome);
+}
+
+// recursivamente percorre a árvore e adiciona 1 ao total a cada node percorrido
+int contarNodes(node *raiz) {
+  if (raiz == NULL) return 0;
+
+  return 1 + contarNodes(raiz->esq) + contarNodes(raiz->dir);
+}
+
 void destruirArvoreAux(node *raiz) {
   if (raiz == NULL) return;
 
@@ -138,26 +153,12 @@ void destruirArvoreAux(node *raiz) {
   free(raiz);
 }
 
+// recursivamente percorre a árvore em pós-ordem p/ deletar todos os nodes
 void destruirArvore(node **raiz) {
   destruirArvoreAux(*raiz);
   
   // atribua NULL para a raiz para que não haja nenhuma variável apontado para os nodes deletados
   *raiz = NULL;
-}
-
-int contarNodes(node *raiz) {
-  if (raiz == NULL) return 0;
-
-  return 1 + contarNodes(raiz->esq) + contarNodes(raiz->dir);
-}
-
-node *procurarNode(node *raiz, char *nome) {
-  if (raiz == NULL) return NULL;
-
-  int cmp = strcmp(nome, raiz->contato.nome);
-
-  if ( cmp == 0 ) return raiz;
-  return procurarNode(cmp < 0 ? raiz->esq : raiz->dir, nome);
 }
 
 int main() {
@@ -171,7 +172,7 @@ int main() {
 
   node *raiz = NULL;
 
-  printNode(raiz);
+  imprimirNode(raiz);
 
   inserirNode(&raiz, luna);
   inserirNode(&raiz, hermione);
@@ -181,82 +182,82 @@ int main() {
   inserirNode(&raiz, dumbledore);
   inserirNode(&raiz, hogwarts);
 
-  // printNode(raiz);
-  // printNode(raiz->esq);
-  // printNode(raiz->esq->esq);
-  // printNode(raiz->esq->dir);
-  // printNode(raiz->esq->esq->esq);
-  // printNode(raiz->dir);
-  // printNode(raiz->dir->dir);
+  // imprimirNode(raiz);
+  // imprimirNode(raiz->esq);
+  // imprimirNode(raiz->esq->esq);
+  // imprimirNode(raiz->esq->dir);
+  // imprimirNode(raiz->esq->esq->esq);
+  // imprimirNode(raiz->dir);
+  // imprimirNode(raiz->dir->dir);
 
   // printf("\n");
-  // printNode(raiz->dir);
-  // printNode(raiz->dir->dir);
+  // imprimirNode(raiz->dir);
+  // imprimirNode(raiz->dir->dir);
   // removerNode(&raiz, "Severus Snape");
-  // printNode(raiz->dir);
-  // printNode(raiz->dir->dir);
+  // imprimirNode(raiz->dir);
+  // imprimirNode(raiz->dir->dir);
 
   // printf("\n");
 
-  // printNode(raiz);
+  // imprimirNode(raiz);
   // node *d = raiz->dir;
-  // printNode(d);
-  // printNode(raiz->dir->dir);
+  // imprimirNode(d);
+  // imprimirNode(raiz->dir->dir);
   // removerNode(&(raiz->dir), "Ron");
-  // printNode(raiz);
-  // printNode(raiz->dir);
-  // printNode(d);
+  // imprimirNode(raiz);
+  // imprimirNode(raiz->dir);
+  // imprimirNode(d);
 
   // destruirArvore(&raiz);
-  // printNode(raiz);
+  // imprimirNode(raiz);
 
   // printf("\n");
 
-  // printNode(raiz);
-  // printNode(raiz->esq);
+  // imprimirNode(raiz);
+  // imprimirNode(raiz->esq);
   // node *r = raiz->esq;
   // removerNode(&raiz, "Hermione Granger");
-  // printNode(raiz);
-  // printNode(raiz->esq);
-  // printNode(r);
+  // imprimirNode(raiz);
+  // imprimirNode(raiz->esq);
+  // imprimirNode(r);
 
   // printf("\n");
-  // printNode(raiz);
-  // printNode(raiz->esq);
-  // printNode(raiz->esq->esq);
-  // printNode(raiz->esq->dir);
-  // printNode(raiz->esq->esq->esq);
-  // printNode(raiz->dir);
-  // printNode(raiz->dir->dir);
+  // imprimirNode(raiz);
+  // imprimirNode(raiz->esq);
+  // imprimirNode(raiz->esq->esq);
+  // imprimirNode(raiz->esq->dir);
+  // imprimirNode(raiz->esq->esq->esq);
+  // imprimirNode(raiz->dir);
+  // imprimirNode(raiz->dir->dir);
 
-  // printNode(raiz);
+  // imprimirNode(raiz);
   // node *r = raiz;
   // removerNode(&raiz, "Luna");
-  // printNode(raiz);
-  // printNode(r);
+  // imprimirNode(raiz);
+  // imprimirNode(r);
 
   // printf("\n");
-  // printNode(raiz);
-  // printNode(raiz->esq);
-  // printNode(raiz->esq->esq);
-  // printNode(raiz->esq->dir);
-  // printNode(raiz->esq->esq->esq);
-  // printNode(raiz->dir);
-  // printNode(raiz->dir->dir);
+  // imprimirNode(raiz);
+  // imprimirNode(raiz->esq);
+  // imprimirNode(raiz->esq->esq);
+  // imprimirNode(raiz->esq->dir);
+  // imprimirNode(raiz->esq->esq->esq);
+  // imprimirNode(raiz->dir);
+  // imprimirNode(raiz->dir->dir);
 
   printf("\n");
-  printArvore(raiz);
+  imprimirArvore(raiz);
 
   printf("\n");
   printf("%d\n", contarNodes(raiz));
 
   printf("\n");
-  printNode(procurarNode(raiz, "Hogwarts School of Magic"));
-  printNode(procurarNode(raiz, "Minerva"));
-  printNode(procurarNode(raiz, "Severus Snape"));
+  imprimirNode(procurarNode(raiz, "Hogwarts School of Magic"));
+  imprimirNode(procurarNode(raiz, "Minerva"));
+  imprimirNode(procurarNode(raiz, "Severus Snape"));
 
   printf("\n");
-  printArvore(raiz);
+  imprimirArvore(raiz);
 
   return 0;
 }
