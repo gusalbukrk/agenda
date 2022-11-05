@@ -145,6 +145,21 @@ void destruirArvore(node **raiz) {
   *raiz = NULL;
 }
 
+int contarNodes(node *raiz) {
+  if (raiz == NULL) return 0;
+
+  return 1 + contarNodes(raiz->esq) + contarNodes(raiz->dir);
+}
+
+node *procurarNode(node *raiz, char *nome) {
+  if (raiz == NULL) return NULL;
+
+  int cmp = strcmp(nome, raiz->contato.nome);
+
+  if ( cmp == 0 ) return raiz;
+  return procurarNode(cmp < 0 ? raiz->esq : raiz->dir, nome);
+}
+
 int main() {
   contato harry = { "Harry", "7777-7777" };
   contato hermione = { "Hermione Granger", "1234-5678" };
@@ -166,13 +181,13 @@ int main() {
   inserirNode(&raiz, dumbledore);
   inserirNode(&raiz, hogwarts);
 
-  printNode(raiz);
-  printNode(raiz->esq);
-  printNode(raiz->esq->esq);
-  printNode(raiz->esq->dir);
-  printNode(raiz->esq->esq->esq);
-  printNode(raiz->dir);
-  printNode(raiz->dir->dir);
+  // printNode(raiz);
+  // printNode(raiz->esq);
+  // printNode(raiz->esq->esq);
+  // printNode(raiz->esq->dir);
+  // printNode(raiz->esq->esq->esq);
+  // printNode(raiz->dir);
+  // printNode(raiz->dir->dir);
 
   // printf("\n");
   // printNode(raiz->dir);
@@ -228,6 +243,17 @@ int main() {
   // printNode(raiz->esq->esq->esq);
   // printNode(raiz->dir);
   // printNode(raiz->dir->dir);
+
+  printf("\n");
+  printArvore(raiz);
+
+  printf("\n");
+  printf("%d\n", contarNodes(raiz));
+
+  printf("\n");
+  printNode(procurarNode(raiz, "Hogwarts School of Magic"));
+  printNode(procurarNode(raiz, "Minerva"));
+  printNode(procurarNode(raiz, "Severus Snape"));
 
   printf("\n");
   printArvore(raiz);
