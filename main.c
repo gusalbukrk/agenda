@@ -23,6 +23,16 @@ void printNode(node *n) {
   printf("(%p) = { %s, %s }, %p, %p\n", n, n->contato.nome, n->contato.telefone, n->esq, n->dir);
 }
 
+// imprime nodes em ordem
+void printArvore(node *raiz) {
+  if (raiz == NULL) return;
+
+  printArvore(raiz->esq);
+  printNode(raiz);
+  // printf("%s: %s\n", raiz->contato.nome, raiz->contato.telefone);
+  printArvore(raiz->dir);
+}
+
 void criaNode(node **ref, contato c) {
   *ref = malloc(sizeof(node));
 
@@ -185,7 +195,7 @@ int main() {
   // destruirArvore(&raiz);
   // printNode(raiz);
 
-  printf("\n");
+  // printf("\n");
 
   // printNode(raiz);
   // printNode(raiz->esq);
@@ -204,20 +214,23 @@ int main() {
   // printNode(raiz->dir);
   // printNode(raiz->dir->dir);
 
-  printNode(raiz);
-  node *r = raiz;
-  removerNode(&raiz, "Luna");
-  printNode(raiz);
-  printNode(r);
+  // printNode(raiz);
+  // node *r = raiz;
+  // removerNode(&raiz, "Luna");
+  // printNode(raiz);
+  // printNode(r);
+
+  // printf("\n");
+  // printNode(raiz);
+  // printNode(raiz->esq);
+  // printNode(raiz->esq->esq);
+  // printNode(raiz->esq->dir);
+  // printNode(raiz->esq->esq->esq);
+  // printNode(raiz->dir);
+  // printNode(raiz->dir->dir);
 
   printf("\n");
-  printNode(raiz);
-  printNode(raiz->esq);
-  printNode(raiz->esq->esq);
-  printNode(raiz->esq->dir);
-  printNode(raiz->esq->esq->esq);
-  printNode(raiz->dir);
-  printNode(raiz->dir->dir);
+  printArvore(raiz);
 
   return 0;
 }
