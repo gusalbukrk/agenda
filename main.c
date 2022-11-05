@@ -88,7 +88,6 @@ void removerNode(node **raiz, char *nome) {
 
       node *tmp = *raiz; // salva raiz em uma variável temporária
       *raiz = *n; // substitui raiz por o descendente mais à direita do seu filho esquerdo
-      *n = NULL; // caso contrário a nova raiz ainda será filho do seu antigo pai
 
       if ( *raiz != tmp->esq ) {
         printf("!!! esq\n");
@@ -99,6 +98,8 @@ void removerNode(node **raiz, char *nome) {
         printf("!!! dir\n");
         (*raiz)->dir = tmp->dir;
       }
+
+      *n = NULL; // caso contrário a nova raiz ainda será filho do seu antigo pai
 
       free(tmp);
       tmp = NULL;
