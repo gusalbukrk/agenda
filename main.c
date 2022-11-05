@@ -99,12 +99,10 @@ void removerNode(node **raiz, char *nome) {
       *raiz = *n; // substitui raiz por o descendente mais à direita do seu filho esquerdo
 
       if ( *raiz != tmp->esq ) {
-        printf("!!! esq\n");
         (*raiz)->esq = tmp->esq;
       }
 
       if ( *raiz != tmp->dir ) {
-        printf("!!! dir\n");
         (*raiz)->dir = tmp->dir;
       }
 
@@ -162,102 +160,75 @@ void destruirArvore(node **raiz) {
 }
 
 int main() {
-  contato harry = { "Harry", "7777-7777" };
-  contato hermione = { "Hermione Granger", "1234-5678" };
-  contato ron = { "Ron", "0000-0000" };
-  contato dumbledore = { "Albus Dumbledore", "1212-1212" };
-  contato snape = { "Severus Snape", "9669-6996" };
-  contato luna = { "Luna", "7981-6134" };
-  contato hogwarts = { "Hogwarts School of Magic", "+44 1234-4321" };
+  contato ana = { "Ana Pereira", "99261-9761" };
+  contato bianca = { "Bianca", "(61) 99281-7747" };
+  contato gabriel = { "Gabriel", "981123773" };
+  contato joao = { "João Guilherme", "(64) 2352-9821" };
+  contato lucas = { "Lucas", "+55 (11) 3213-7698" };
+  contato pedro = { "Pedro da Silva", "3441-9822" };
+  contato restaurante = { "Restaurante", "(64) 3411-2388" };
+  contato sofia = { "Sofia S.", "(11) 99268-9821" };
 
   node *raiz = NULL;
 
+  //             Lucas
+  //      Gabriel     Restaurante
+  //   Bianca  João  Pedro   Sofia
+  //  Ana
+  inserirNode(&raiz, lucas);
+  inserirNode(&raiz, gabriel);
+  inserirNode(&raiz, bianca);
+  inserirNode(&raiz, restaurante);
+  inserirNode(&raiz, ana);
+  inserirNode(&raiz, joao);
+  inserirNode(&raiz, pedro);
+  inserirNode(&raiz, sofia);
+
+  printf("TESTE: contarNodes\n");
+  printf("%d nodes\n", contarNodes(raiz));
+
+  printf("\nTESTE: imprimirNode\n");
   imprimirNode(raiz);
+  imprimirNode(raiz->esq);
+  imprimirNode(raiz->esq->esq);
+  imprimirNode(raiz->esq->dir);
+  imprimirNode(raiz->esq->esq->esq);
+  imprimirNode(raiz->dir);
+  imprimirNode(raiz->dir->esq);
+  imprimirNode(raiz->dir->dir);
 
-  inserirNode(&raiz, luna);
-  inserirNode(&raiz, hermione);
-  inserirNode(&raiz, ron);
-  inserirNode(&raiz, harry);
-  inserirNode(&raiz, snape);
-  inserirNode(&raiz, dumbledore);
-  inserirNode(&raiz, hogwarts);
-
-  // imprimirNode(raiz);
-  // imprimirNode(raiz->esq);
-  // imprimirNode(raiz->esq->esq);
-  // imprimirNode(raiz->esq->dir);
-  // imprimirNode(raiz->esq->esq->esq);
-  // imprimirNode(raiz->dir);
-  // imprimirNode(raiz->dir->dir);
-
-  // printf("\n");
-  // imprimirNode(raiz->dir);
-  // imprimirNode(raiz->dir->dir);
-  // removerNode(&raiz, "Severus Snape");
-  // imprimirNode(raiz->dir);
-  // imprimirNode(raiz->dir->dir);
-
-  // printf("\n");
-
-  // imprimirNode(raiz);
-  // node *d = raiz->dir;
-  // imprimirNode(d);
-  // imprimirNode(raiz->dir->dir);
-  // removerNode(&(raiz->dir), "Ron");
-  // imprimirNode(raiz);
-  // imprimirNode(raiz->dir);
-  // imprimirNode(d);
-
-  // destruirArvore(&raiz);
-  // imprimirNode(raiz);
-
-  // printf("\n");
-
-  // imprimirNode(raiz);
-  // imprimirNode(raiz->esq);
-  // node *r = raiz->esq;
-  // removerNode(&raiz, "Hermione Granger");
-  // imprimirNode(raiz);
-  // imprimirNode(raiz->esq);
-  // imprimirNode(r);
-
-  // printf("\n");
-  // imprimirNode(raiz);
-  // imprimirNode(raiz->esq);
-  // imprimirNode(raiz->esq->esq);
-  // imprimirNode(raiz->esq->dir);
-  // imprimirNode(raiz->esq->esq->esq);
-  // imprimirNode(raiz->dir);
-  // imprimirNode(raiz->dir->dir);
-
-  // imprimirNode(raiz);
-  // node *r = raiz;
-  // removerNode(&raiz, "Luna");
-  // imprimirNode(raiz);
-  // imprimirNode(r);
-
-  // printf("\n");
-  // imprimirNode(raiz);
-  // imprimirNode(raiz->esq);
-  // imprimirNode(raiz->esq->esq);
-  // imprimirNode(raiz->esq->dir);
-  // imprimirNode(raiz->esq->esq->esq);
-  // imprimirNode(raiz->dir);
-  // imprimirNode(raiz->dir->dir);
-
-  printf("\n");
+  printf("\nTESTE: imprimirArvore\n");
   imprimirArvore(raiz);
 
-  printf("\n");
-  printf("%d\n", contarNodes(raiz));
+  printf("\nTESTE: removerNode (node sem filhos)\n");
+  imprimirNode(raiz->dir); // pai do node a ser removido
+  imprimirNode(raiz->dir->dir); // node a ser removido
+  removerNode(&raiz, "Sofia S.");
+  imprimirNode(raiz->dir); // a propriedade dir desse node agora está NULL
+  imprimirNode(raiz->dir->dir);
 
-  printf("\n");
-  imprimirNode(procurarNode(raiz, "Hogwarts School of Magic"));
-  imprimirNode(procurarNode(raiz, "Minerva"));
-  imprimirNode(procurarNode(raiz, "Severus Snape"));
+  printf("\nTESTE: removerNode (node com 1 filho)\n");
+  imprimirNode(raiz->esq); // pai do node a ser removido
+  imprimirNode(raiz->esq->esq); // node a ser removido
+  removerNode(&raiz, "Bianca");
+  imprimirNode(raiz->esq); // a propriedade dir desse node agora está NULL
+  imprimirNode(raiz->esq->esq);
 
-  printf("\n");
-  imprimirArvore(raiz);
+  printf("\nTESTE: removerNode (node com 2 filhos)\n");
+  imprimirNode(raiz->esq); // pai do node que vai substituir o node a ser removido
+  imprimirNode(raiz); // node a ser removido
+  removerNode(&raiz, "Lucas");
+  imprimirNode(raiz->esq); // a propriedade dir desse node agora está NULL
+  imprimirNode(raiz); // novo node que está no lugar do node que foi removido
+
+  printf("\nTESTE: procurarNode\n");
+  imprimirNode(procurarNode(raiz, "Gabriel"));
+  imprimirNode(procurarNode(raiz, "Pedro da Silva"));
+
+  printf("\nTESTE: destruirArvore\n");
+  printf("%d nodes\n", contarNodes(raiz));
+  destruirArvore(&raiz);
+  printf("%d nodes\n", contarNodes(raiz));
 
   return 0;
 }
