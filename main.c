@@ -70,8 +70,10 @@ int main() {
 
   printf("\nTESTE: destruirArvore\n");
   printf("%d nodes\n", contarNodes(raiz));
+  imprimirNode(raiz);
   destruirArvore(&raiz);
   printf("%d nodes\n", contarNodes(raiz));
+  imprimirNode(raiz);
 
   return 0;
 }

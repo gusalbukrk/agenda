@@ -127,18 +127,12 @@ int contarNodes(node *raiz) {
   return 1 + contarNodes(raiz->esq) + contarNodes(raiz->dir);
 }
 
-void destruirArvoreAux(node *raiz) {
-  if (raiz == NULL) return;
-
-  destruirArvoreAux(raiz->esq);
-  destruirArvoreAux(raiz->dir);
-  free(raiz);
-}
-
 // recursivamente percorre a árvore em pós-ordem p/ deletar todos os nodes
 void destruirArvore(node **raiz) {
-  destruirArvoreAux(*raiz);
-  
-  // atribua NULL para a raiz para que não haja nenhuma variável apontado para os nodes deletados
+  if (*raiz == NULL) return;
+
+  destruirArvore(&(*raiz)->esq);
+  destruirArvore(&(*raiz)->dir);
+  free(*raiz);
   *raiz = NULL;
 }
