@@ -59,6 +59,9 @@ void inserirNodeAux(node **raiz, contato c) {
 
 // recursivamente percorre a árvore p/ encontrar a folha em que adicionar o novo contato
 void inserirNode(node **raiz, contato c) {
+  // a primeira letra dos nomes dos contatos devem sempre estar em maiúscula
+  if (c.nome[0] >= 97 && c.nome[0] <= 122) c.nome[0] -= 32;
+
   // caso a árvore esteja vazia, adicione o primeiro elemento
   if ( *raiz == NULL ) { 
     criarNode(raiz, c);
