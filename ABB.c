@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "abb.h"
+#include "ABB.h"
 
 void imprimirNode(node *n) {
   if (n == NULL) {
