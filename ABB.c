@@ -42,7 +42,7 @@ void inserirNodeAux(node **raiz, contato c) {
   inserirNodeAux(strcmp(c.nome, (*raiz)->contato.nome) < 0 ? &((*raiz)->esq) : &((*raiz)->dir), c);
 }
 
-// recursivamente percorre a árvore p/ encontrar a folha em que adicionar o novo contato
+// percorre a árvore p/ encontrar o node folha em que adicionar o novo contato
 void inserirNode(node **raiz, contato c) {
   // a primeira letra dos nomes dos contatos devem sempre estar em maiúscula
   if (c.nome[0] >= 97 && c.nome[0] <= 122) c.nome[0] -= 32;
@@ -59,7 +59,7 @@ node **retornarDescendenteMaisADireita(node **raiz) {
   return retornarDescendenteMaisADireita(&(*raiz)->dir);
 }
 
-// recursivamente percorre a árvore p/ encontar o node a ser removido
+// percorre a árvore p/ encontar o node com o exato nome e removê-lo
 void removerNode(node **raiz, char *nome) {
   if (*raiz == NULL) return;
 
@@ -110,14 +110,14 @@ void removerNode(node **raiz, char *nome) {
   removerNode(cmp < 0 ? &(*raiz)->esq : &(*raiz)->dir, nome);
 }
 
-// recursivamente percorre a árvore e adiciona 1 ao total a cada node percorrido
+// percorre toda a árvore p/ calcular o número total de nodes
 int contarNodes(node *raiz) {
   if (raiz == NULL) return 0;
 
   return 1 + contarNodes(raiz->esq) + contarNodes(raiz->dir);
 }
 
-// recursivamente percorre a árvore p/ encontrar o contato com o exato nome
+// percorre a árvore p/ encontrar o contato com o exato nome e retorná-lo
 node *procurarNode(node *raiz, char *nome) {
   if (raiz == NULL) return NULL;
 
@@ -127,7 +127,7 @@ node *procurarNode(node *raiz, char *nome) {
   return procurarNode(cmp < 0 ? raiz->esq : raiz->dir, nome);
 }
 
-// recursivamente percorre a árvore em pós-ordem p/ deletar todos os nodes
+// percorre a árvore em pós-ordem p/ deletar todos os nodes
 void destruirArvore(node **raiz) {
   if (*raiz == NULL) return;
 
