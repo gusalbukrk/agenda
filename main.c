@@ -33,6 +33,16 @@ void imprimirArvore(node *raiz) {
   imprimirArvore(raiz->dir);
 }
 
+// recursivamente percorre a árvore p/ encontrar o contato desejado
+node *procurarNode(node *raiz, char *nome) {
+  if (raiz == NULL) return NULL;
+
+  int cmp = strcmp(nome, raiz->contato.nome);
+
+  if ( cmp == 0 ) return raiz;
+  return procurarNode(cmp < 0 ? raiz->esq : raiz->dir, nome);
+}
+
 void criarNode(node **ref, contato c) {
   *ref = malloc(sizeof(node));
 
@@ -61,6 +71,9 @@ void inserirNodeAux(node **raiz, contato c) {
 void inserirNode(node **raiz, contato c) {
   // a primeira letra dos nomes dos contatos devem sempre estar em maiúscula
   if (c.nome[0] >= 97 && c.nome[0] <= 122) c.nome[0] -= 32;
+
+  // os nodes de árvores binárias de busca devem ser únicos
+  if (procurarNode(*raiz, c.nome)) return;
 
   // caso a árvore esteja vazia, adicione o primeiro elemento
   if ( *raiz == NULL ) { 
@@ -127,16 +140,6 @@ void removerNode(node **raiz, char *nome) {
   }
 
   removerNode(cmp < 0 ? &(*raiz)->esq : &(*raiz)->dir, nome);
-}
-
-// recursivamente percorre a árvore p/ encontrar o contato desejado
-node *procurarNode(node *raiz, char *nome) {
-  if (raiz == NULL) return NULL;
-
-  int cmp = strcmp(nome, raiz->contato.nome);
-
-  if ( cmp == 0 ) return raiz;
-  return procurarNode(cmp < 0 ? raiz->esq : raiz->dir, nome);
 }
 
 // recursivamente percorre a árvore e adiciona 1 ao total a cada node percorrido
