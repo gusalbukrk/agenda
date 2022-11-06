@@ -23,16 +23,6 @@ void imprimirArvore(node *raiz) {
   imprimirArvore(raiz->dir);
 }
 
-// recursivamente percorre a árvore p/ encontrar o contato desejado
-node *procurarNode(node *raiz, char *nome) {
-  if (raiz == NULL) return NULL;
-
-  int cmp = strcmp(nome, raiz->contato.nome);
-
-  if ( cmp == 0 ) return raiz;
-  return procurarNode(cmp < 0 ? raiz->esq : raiz->dir, nome);
-}
-
 void criarNode(node **ref, contato c) {
   *ref = (node *) malloc(sizeof(node));
 
@@ -125,6 +115,16 @@ int contarNodes(node *raiz) {
   if (raiz == NULL) return 0;
 
   return 1 + contarNodes(raiz->esq) + contarNodes(raiz->dir);
+}
+
+// recursivamente percorre a árvore p/ encontrar o contato com o exato nome
+node *procurarNode(node *raiz, char *nome) {
+  if (raiz == NULL) return NULL;
+
+  int cmp = strcmp(nome, raiz->contato.nome);
+
+  if ( cmp == 0 ) return raiz;
+  return procurarNode(cmp < 0 ? raiz->esq : raiz->dir, nome);
 }
 
 // recursivamente percorre a árvore em pós-ordem p/ deletar todos os nodes
