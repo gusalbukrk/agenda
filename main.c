@@ -6,7 +6,7 @@
 
 // https://www.enjoyalgorithms.com/blog/iterative-binary-tree-traversals-using-stack
 
-void preorder(node *raiz) {
+void preorder(node *raiz, void callback(node *n)) {
   if (raiz == NULL) return;
 
   stack *s = NULL; initStack(&s);
@@ -14,7 +14,7 @@ void preorder(node *raiz) {
 
   while ( s->quant != 0 || currNode != NULL ) {
     if (currNode != NULL) {
-      printf("%s\n", currNode->contato.nome);
+      callback(currNode);
       push(&s, currNode);
       currNode = currNode->esq;
     } else {
@@ -24,7 +24,7 @@ void preorder(node *raiz) {
   }
 }
 
-void inorder(node *raiz) {
+void inorder(node *raiz, void callback(node *n)) {
   if (raiz == NULL) return;
 
   stack *s = NULL; initStack(&s);
@@ -36,13 +36,13 @@ void inorder(node *raiz) {
       currNode = currNode->esq;
     } else {
       currNode = pop(&s);
-      printf("%s\n", currNode->contato.nome);
+      callback(currNode);
       currNode = currNode->dir;
     }
   }
 }
 
-void postorder(node *raiz) {
+void postorder(node *raiz, void callback(node *n)) {
   if (raiz == NULL) return;
 
   stack *s = NULL; initStack(&s);
@@ -62,7 +62,7 @@ void postorder(node *raiz) {
       ) {
         currNode = pop(&dir);
       } else {
-        printf("%s\n", currNode->contato.nome);
+        callback(currNode);
         pop(&s);
         currNode = NULL;
       }
@@ -151,12 +151,14 @@ int main() {
   // push(&s, raiz->dir);
   // printStack(s);
 
+  void (*fn)(node *n) = &imprimirNode;
+
   printf("\nPREORDER\n");
-  preorder(raiz);
+  preorder(raiz, fn);
   printf("\nINORDER\n");
-  inorder(raiz);
+  inorder(raiz, fn);
   printf("\nPOSTORDER\n");
-  postorder(raiz);
+  postorder(raiz, fn);
 
   return 0;
 }
