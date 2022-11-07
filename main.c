@@ -10,16 +10,16 @@ void preorder(node *raiz, void callback(node *n)) {
   if (raiz == NULL) return;
 
   stack *s = NULL; initStack(&s);
-  node *currNode = raiz, *prevNode = NULL;
+  node *atual = raiz, *prevNode = NULL;
 
-  while ( s->quant != 0 || currNode != NULL ) {
-    if (currNode != NULL) {
-      callback(currNode);
-      push(&s, currNode);
-      currNode = currNode->esq;
+  while ( s->quant != 0 || atual != NULL ) {
+    if (atual != NULL) {
+      callback(atual);
+      push(&s, atual);
+      atual = atual->esq;
     } else {
       prevNode = pop(&s);
-      currNode = prevNode->dir;
+      atual = prevNode->dir;
     }
   }
 }
@@ -28,16 +28,16 @@ void inorder(node *raiz, void callback(node *n)) {
   if (raiz == NULL) return;
 
   stack *s = NULL; initStack(&s);
-  node *currNode = raiz;
+  node *atual = raiz;
 
-  while ( s->quant != 0 || currNode != NULL ) {
-    if (currNode != NULL) {
-      push(&s, currNode);
-      currNode = currNode->esq;
+  while ( s->quant != 0 || atual != NULL ) {
+    if (atual != NULL) {
+      push(&s, atual);
+      atual = atual->esq;
     } else {
-      currNode = pop(&s);
-      callback(currNode);
-      currNode = currNode->dir;
+      atual = pop(&s);
+      callback(atual);
+      atual = atual->dir;
     }
   }
 }
@@ -47,24 +47,24 @@ void postorder(node *raiz, void callback(node *n)) {
 
   stack *s = NULL; initStack(&s);
   stack *dir = NULL; initStack(&dir);
-  node *currNode = raiz;
+  node *atual = raiz;
 
-  while ( s->quant != 0 || currNode != NULL ) {
-    if (currNode != NULL) {
-      if (currNode->dir != NULL) push(&dir, currNode->dir);
-      push(&s, currNode);
-      currNode = currNode->esq;
+  while ( s->quant != 0 || atual != NULL ) {
+    if (atual != NULL) {
+      if (atual->dir != NULL) push(&dir, atual->dir);
+      push(&s, atual);
+      atual = atual->esq;
     } else {
-      currNode = &(s->values[0]);
+      atual = &(s->values[0]);
       if (
         dir->quant != 0 &&
-        ( currNode->dir != NULL && (strcmp(currNode->dir->contato.nome, dir->values[0].contato.nome) == 0) )
+        ( atual->dir != NULL && (strcmp(atual->dir->contato.nome, dir->values[0].contato.nome) == 0) )
       ) {
-        currNode = pop(&dir);
+        atual = pop(&dir);
       } else {
-        callback(currNode);
+        callback(atual);
         pop(&s);
-        currNode = NULL;
+        atual = NULL;
       }
     }
   }
