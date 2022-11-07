@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "ABB.h"
+#include "stack.h"
 
 int main() {
   contato ana = { "Ana Pereira", "99261-9761" };
@@ -68,12 +69,20 @@ int main() {
   imprimirNode(procurarNode(raiz, "Gabriel"));
   imprimirNode(procurarNode(raiz, "Pedro da Silva"));
 
-  printf("\nTESTE: destruirArvore\n");
-  printf("%d nodes\n", contarNodes(raiz));
-  imprimirNode(raiz);
-  destruirArvore(&raiz);
-  printf("%d nodes\n", contarNodes(raiz));
-  imprimirNode(raiz);
+  // printf("\nTESTE: destruirArvore\n");
+  // printf("%d nodes\n", contarNodes(raiz));
+  // imprimirNode(raiz);
+  // destruirArvore(&raiz);
+  // printf("%d nodes\n", contarNodes(raiz));
+  // imprimirNode(raiz);
+
+  printf("\n");
+  stack *s = NULL;
+  push(&s, raiz);
+  push(&s, raiz->esq);
+  pop(&s);
+  push(&s, raiz->dir);
+  printStack(s);
 
   return 0;
 }
