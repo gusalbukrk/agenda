@@ -4,6 +4,11 @@
 #include "ABB.h"
 #include "stack.h"
 
+void initStack(stack **s) {
+  *s = malloc(sizeof(stack));
+  (*s)->quant = 0;
+}
+
 void printStack(stack *s) {
   for (int i = 0; i < s->quant; i++) {
     node n = s->values[i];

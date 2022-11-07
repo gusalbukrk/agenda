@@ -1,7 +1,74 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "ABB.h"
 #include "stack.h"
+
+// https://www.enjoyalgorithms.com/blog/iterative-binary-tree-traversals-using-stack
+
+void preorder(node *raiz) {
+  if (raiz == NULL) return;
+
+  stack *s = NULL; initStack(&s);
+  node *currNode = raiz, *prevNode = NULL;
+
+  while ( s->quant != 0 || currNode != NULL ) {
+    if (currNode != NULL) {
+      printf("%s\n", currNode->contato.nome);
+      push(&s, currNode);
+      currNode = currNode->esq;
+    } else {
+      prevNode = pop(&s);
+      currNode = prevNode->dir;
+    }
+  }
+}
+
+void inorder(node *raiz) {
+  if (raiz == NULL) return;
+
+  stack *s = NULL; initStack(&s);
+  node *currNode = raiz;
+
+  while ( s->quant != 0 || currNode != NULL ) {
+    if (currNode != NULL) {
+      push(&s, currNode);
+      currNode = currNode->esq;
+    } else {
+      currNode = pop(&s);
+      printf("%s\n", currNode->contato.nome);
+      currNode = currNode->dir;
+    }
+  }
+}
+
+void postorder(node *raiz) {
+  if (raiz == NULL) return;
+
+  stack *s = NULL; initStack(&s);
+  stack *dir = NULL; initStack(&dir);
+  node *currNode = raiz;
+
+  while ( s->quant != 0 || currNode != NULL ) {
+    if (currNode != NULL) {
+      if (currNode->dir != NULL) push(&dir, currNode->dir);
+      push(&s, currNode);
+      currNode = currNode->esq;
+    } else {
+      currNode = &(s->values[0]);
+      if (
+        dir->quant != 0 &&
+        ( currNode->dir != NULL && (strcmp(currNode->dir->contato.nome, dir->values[0].contato.nome) == 0) )
+      ) {
+        currNode = pop(&dir);
+      } else {
+        printf("%s\n", currNode->contato.nome);
+        pop(&s);
+        currNode = NULL;
+      }
+    }
+  }
+}
 
 int main() {
   contato ana = { "Ana Pereira", "99261-9761" };
@@ -31,43 +98,43 @@ int main() {
   printf("TESTE: contarNodes\n");
   printf("%d nodes\n", contarNodes(raiz));
 
-  printf("\nTESTE: imprimirNode\n");
-  imprimirNode(raiz);
-  imprimirNode(raiz->esq);
-  imprimirNode(raiz->esq->esq);
-  imprimirNode(raiz->esq->dir);
-  imprimirNode(raiz->esq->esq->esq);
-  imprimirNode(raiz->dir);
-  imprimirNode(raiz->dir->esq);
-  imprimirNode(raiz->dir->dir);
+  // printf("\nTESTE: imprimirNode\n");
+  // imprimirNode(raiz);
+  // imprimirNode(raiz->esq);
+  // imprimirNode(raiz->esq->esq);
+  // imprimirNode(raiz->esq->dir);
+  // imprimirNode(raiz->esq->esq->esq);
+  // imprimirNode(raiz->dir);
+  // imprimirNode(raiz->dir->esq);
+  // imprimirNode(raiz->dir->dir);
 
-  printf("\nTESTE: imprimirArvore\n");
-  imprimirArvore(raiz);
+  // printf("\nTESTE: imprimirArvore\n");
+  // imprimirArvore(raiz);
 
-  printf("\nTESTE: removerNode (node sem filhos)\n");
-  imprimirNode(raiz->dir); // pai do node a ser removido
-  imprimirNode(raiz->dir->dir); // node a ser removido
-  removerNode(&raiz, "Sofia S.");
-  imprimirNode(raiz->dir); // a propriedade dir desse node agora está NULL
-  imprimirNode(raiz->dir->dir);
+  // printf("\nTESTE: removerNode (node sem filhos)\n");
+  // imprimirNode(raiz->dir); // pai do node a ser removido
+  // imprimirNode(raiz->dir->dir); // node a ser removido
+  // removerNode(&raiz, "Sofia S.");
+  // imprimirNode(raiz->dir); // a propriedade dir desse node agora está NULL
+  // imprimirNode(raiz->dir->dir);
 
-  printf("\nTESTE: removerNode (node com 1 filho)\n");
-  imprimirNode(raiz->esq); // pai do node a ser removido
-  imprimirNode(raiz->esq->esq); // node a ser removido
-  removerNode(&raiz, "Bianca");
-  imprimirNode(raiz->esq); // a propriedade dir desse node agora está NULL
-  imprimirNode(raiz->esq->esq);
+  // printf("\nTESTE: removerNode (node com 1 filho)\n");
+  // imprimirNode(raiz->esq); // pai do node a ser removido
+  // imprimirNode(raiz->esq->esq); // node a ser removido
+  // removerNode(&raiz, "Bianca");
+  // imprimirNode(raiz->esq); // a propriedade dir desse node agora está NULL
+  // imprimirNode(raiz->esq->esq);
 
-  printf("\nTESTE: removerNode (node com 2 filhos)\n");
-  imprimirNode(raiz->esq); // pai do node que vai substituir o node a ser removido
-  imprimirNode(raiz); // node a ser removido
-  removerNode(&raiz, "Lucas");
-  imprimirNode(raiz->esq); // a propriedade dir desse node agora está NULL
-  imprimirNode(raiz); // novo node que está no lugar do node que foi removido
+  // printf("\nTESTE: removerNode (node com 2 filhos)\n");
+  // imprimirNode(raiz->esq); // pai do node que vai substituir o node a ser removido
+  // imprimirNode(raiz); // node a ser removido
+  // removerNode(&raiz, "Lucas");
+  // imprimirNode(raiz->esq); // a propriedade dir desse node agora está NULL
+  // imprimirNode(raiz); // novo node que está no lugar do node que foi removido
 
-  printf("\nTESTE: procurarNode\n");
-  imprimirNode(procurarNode(raiz, "Gabriel"));
-  imprimirNode(procurarNode(raiz, "Pedro da Silva"));
+  // printf("\nTESTE: procurarNode\n");
+  // imprimirNode(procurarNode(raiz, "Gabriel"));
+  // imprimirNode(procurarNode(raiz, "Pedro da Silva"));
 
   // printf("\nTESTE: destruirArvore\n");
   // printf("%d nodes\n", contarNodes(raiz));
@@ -76,13 +143,20 @@ int main() {
   // printf("%d nodes\n", contarNodes(raiz));
   // imprimirNode(raiz);
 
-  printf("\n");
-  stack *s = NULL;
-  push(&s, raiz);
-  push(&s, raiz->esq);
-  pop(&s);
-  push(&s, raiz->dir);
-  printStack(s);
+  // printf("\n");
+  // stack *s = NULL;
+  // push(&s, raiz);
+  // push(&s, raiz->esq);
+  // pop(&s);
+  // push(&s, raiz->dir);
+  // printStack(s);
+
+  printf("\nPREORDER\n");
+  preorder(raiz);
+  printf("\nINORDER\n");
+  inorder(raiz);
+  printf("\nPOSTORDER\n");
+  postorder(raiz);
 
   return 0;
 }

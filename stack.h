@@ -5,6 +5,7 @@ typedef struct Stack {
   node values[];
 } stack;
 
+void initStack(stack **s);
 void printStack(stack *s);
 void push(stack **s, node *n);
 node *pop(stack **s);
