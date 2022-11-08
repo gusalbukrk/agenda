@@ -17,10 +17,9 @@ void printStack(stack *s) {
 }
 
 void push(stack **s, node *n) {
-  int newQuant = (*s) == NULL ? 1 : (*s)->quant + 1;
-  *s = realloc( *s, sizeof(stack) + (sizeof(node) * newQuant) );
+  *s = realloc( *s, sizeof(stack) + (sizeof(node) * ((*s)->quant + 1)) );
 
-  for (int i = newQuant - 1; i > 0; i--) {
+  for (int i = (*s)->quant; i > 0; i--) {
     (*s)->values[i] = (*s)->values[i - 1];
   }
 
@@ -30,7 +29,7 @@ void push(stack **s, node *n) {
   t->dir = n->dir;
   (*s)->values[0] = *t;
 
-  (*s)->quant = newQuant;
+  (*s)->quant += 1;
 }
 
 node *pop(stack **s) {
