@@ -5,6 +5,9 @@
 #include "ABBI.h"
 #include "stack.h"
 
+// preorder, inorder & post order reference:
+// https://www.enjoyalgorithms.com/blog/iterative-binary-tree-traversals-using-stack
+
 void preorder(node *raiz, void callback(node *n)) {
   if (raiz == NULL) return;
 
