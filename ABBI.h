@@ -1,5 +1,5 @@
-#ifndef ABB
-#define ABB
+#ifndef ABBI
+#define ABBI
 
   typedef struct Contato {
     char nome[50];
