@@ -79,7 +79,7 @@ void imprimirNode(node *n) {
 }
 
 // imprime nodes em-ordem
-void imprimirArvore(node *raiz) {
+void imprimirArvoreI(node *raiz) {
   if (raiz == NULL) return;
 
   stack *s = NULL; initStack(&s);
@@ -105,9 +105,9 @@ void criarNode(node **ref, contato c) {
   (*ref)->dir = NULL;
 }
 
-void inserirNode(node **raiz, contato c) {
+void inserirNodeI(node **raiz, contato c) {
   if (c.nome[0] >= 97 && c.nome[0] <= 122) c.nome[0] -= 32;
-  if (procurarNode(*raiz, c.nome)) return;
+  if (procurarNodeI(*raiz, c.nome)) return;
 
   node **n = raiz;
 
@@ -124,7 +124,7 @@ node **retornarDescendenteMaisADireita(node **raiz) {
   return retornarDescendenteMaisADireita(&(*raiz)->dir);
 }
 
-void removerNode(node **raiz, char *nome) {
+void removerNodeI(node **raiz, char *nome) {
   if (raiz == NULL) return;
 
   node **n = raiz;
@@ -178,7 +178,7 @@ void removerNode(node **raiz, char *nome) {
 // percorre toda a árvore p/ calcular o número total de nodes
 // a ordem em que a árvore será percorrida é irrelevante, usaremos pré-ordem
 // pois as alternativas (em-ordem e pós-ordem) já foram utilizadas em outras funções
-int contarNodes(node *raiz) {
+int contarNodesI(node *raiz) {
   if (raiz == NULL) return 0;
 
   stack *s = NULL; initStack(&s);
@@ -200,7 +200,7 @@ int contarNodes(node *raiz) {
   return contador;
 }
 
-node *procurarNode(node *raiz, char *nome) {
+node *procurarNodeI(node *raiz, char *nome) {
   if (raiz == NULL) return NULL;
 
   node *n = raiz;
@@ -217,7 +217,7 @@ node *procurarNode(node *raiz, char *nome) {
 }
 
 // percorre a árvore em pós-ordem p/ deletar todos os nodes
-void destruirArvore(node **raiz) {
+void destruirArvoreI(node **raiz) {
   if (*raiz == NULL) return;
 
   stack *s = NULL; initStack(&s);
