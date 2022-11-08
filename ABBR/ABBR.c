@@ -30,18 +30,26 @@ void criarNode(node **ref, contato c) {
   (*ref)->dir = NULL;
 }
 
-// percorre a árvore p/ encontrar o node folha em que adicionar o novo contato
-void inserirNode(node **raiz, contato c) {
-  if (c.nome[0] >= 97 && c.nome[0] <= 122) c.nome[0] -= 32;
-  if (procurarNode(*raiz, c.nome)) return;
-
-  node **n = raiz;
-
-  while (*n != NULL) {
-    n = strcmp(c.nome, (*n)->contato.nome) < 0 ? &(*n)->esq : &(*n)->dir;
+void inserirNodeAux(node **raiz, contato c) {
+  if ( *raiz == NULL ) { // caso node atual esteja vazio, insira novo contato
+    criarNode(raiz, c);
+    return;
   }
 
-  criarNode(n, c);
+  // use recursão para executar essa função novamente
+  // dessa vez usando o node filho da esquerda ou da direita como raiz
+  inserirNodeAux(strcmp(c.nome, (*raiz)->contato.nome) < 0 ? &((*raiz)->esq) : &((*raiz)->dir), c);
+}
+
+// percorre a árvore p/ encontrar o node folha em que adicionar o novo contato
+void inserirNode(node **raiz, contato c) {
+  // a primeira letra dos nomes dos contatos devem sempre estar em maiúscula
+  if (c.nome[0] >= 97 && c.nome[0] <= 122) c.nome[0] -= 32;
+
+  // os nodes de árvores binárias de busca devem ser únicos
+  if (procurarNode(*raiz, c.nome)) return;
+
+  inserirNodeAux(raiz, c);
 }
 
 node **retornarDescendenteMaisADireita(node **raiz) {
@@ -52,54 +60,53 @@ node **retornarDescendenteMaisADireita(node **raiz) {
 
 // percorre a árvore p/ encontar o node com o exato nome e removê-lo
 void removerNode(node **raiz, char *nome) {
-  if (raiz == NULL) return;
+  if (*raiz == NULL) return;
 
-  node **n = raiz;
+  int cmp = strcmp(nome, (*raiz)->contato.nome);
 
-  int cmp;
+  if (cmp == 0) { // caso raiz é o contato a ser removido
 
-  while ( (cmp = strcmp(nome, (*n)->contato.nome)) != 0 ) {
-    n = cmp < 0 ? &((*n)->esq) : &((*n)->dir);
-    
-    if (*n == NULL) return;
-  }
+    // caso node a ser removido é um node folha, simplesmente remova-o
+    if ( (*raiz)->esq == NULL && (*raiz)->dir == NULL ) {
+      free(*raiz);
+      *raiz = NULL;
 
-  // caso node a ser removido é um node folha, simplesmente remova-o
-  if ( (*n)->esq == NULL && (*n)->dir == NULL ) {
-    free(*n);
-    *n = NULL;
+    // caso node a ser removido possua 2 filhos
+    // substitua-o por o seu node predecessor ou sucessor em ordem, ou seja:
+    // - o node mais à direita da sub-árvore do filho da esquerda
+    // - o node mais à esquerda da sub-árvore do filho da direita
+    } else if ( (*raiz)->esq != NULL && (*raiz)->dir != NULL ) {
+      node **n = retornarDescendenteMaisADireita(&(*raiz)->esq);
 
-  // caso node a ser removido possua 2 filhos
-  // substitua-o por o seu node predecessor ou sucessor em ordem, ou seja:
-  // - o node mais à direita da sub-árvore do filho da esquerda
-  // - o node mais à esquerda da sub-árvore do filho da direita
-  } else if ( (*n)->esq != NULL && (*n)->dir != NULL ) {
-    node **d = retornarDescendenteMaisADireita(&(*n)->esq);
+      node *tmp = *raiz; // salva raiz em uma variável temporária
+      *raiz = *n; // substitui raiz por o descendente mais à direita do seu filho esquerdo
 
-    node *tmp = *n; // salva raiz em uma variável temporária
-    *n = *d; // substitui raiz por o descendente mais à direita do seu filho esquerdo
+      if ( *raiz != tmp->esq ) {
+        (*raiz)->esq = tmp->esq;
+      }
 
-    if ( *n != tmp->esq ) {
-      (*n)->esq = tmp->esq;
+      if ( *raiz != tmp->dir ) {
+        (*raiz)->dir = tmp->dir;
+      }
+
+      *n = NULL; // caso contrário a nova raiz ainda será filho do seu antigo pai
+
+      free(tmp);
+      tmp = NULL;
+
+    // caso node a ser removido possua apenas um filho — esq ou dir
+    // substitua o node a ser removido por o seu único filho
+    } else {
+      node **child = (*raiz)->esq != NULL ? &(*raiz)->esq : &(*raiz)->dir;
+
+      free(*raiz);
+      *raiz = *child;
     }
 
-    if ( *n != tmp->dir ) {
-      (*n)->dir = tmp->dir;
-    }
-
-    *d = NULL; // caso contrário a nova raiz ainda será filho do seu antigo pai
-
-    free(tmp);
-    tmp = NULL;
-
-  // caso node a ser removido possua apenas um filho — esq ou dir
-  // substitua o node a ser removido por o seu único filho
-  } else {
-    node **child = (*n)->esq != NULL ? &(*n)->esq : &(*n)->dir;
-
-    free(*n);
-    *n = *child;
+    return;
   }
+
+  removerNode(cmp < 0 ? &(*raiz)->esq : &(*raiz)->dir, nome);
 }
 
 // percorre toda a árvore em pré-ordem p/ calcular o número total de nodes
@@ -109,21 +116,14 @@ int contarNodes(node *raiz) {
   return 1 + contarNodes(raiz->esq) + contarNodes(raiz->dir);
 }
 
-// // percorre a árvore p/ encontrar o contato com o exato nome e retorná-lo
+// percorre a árvore p/ encontrar o contato com o exato nome e retorná-lo
 node *procurarNode(node *raiz, char *nome) {
   if (raiz == NULL) return NULL;
 
-  node *n = raiz;
+  int cmp = strcmp(nome, raiz->contato.nome);
 
-  int cmp;
-
-  while ( (cmp = strcmp(nome, n->contato.nome)) != 0 ) {
-    n = cmp < 0 ? n->esq : n->dir;
-    
-    if (n == NULL) return NULL;
-  }
-
-  return n;
+  if ( cmp == 0 ) return raiz;
+  return procurarNode(cmp < 0 ? raiz->esq : raiz->dir, nome);
 }
 
 // percorre a árvore em pós-ordem p/ deletar todos os nodes
