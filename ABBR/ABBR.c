@@ -14,12 +14,12 @@ void imprimirNode(node *n) {
 }
 
 // imprime nodes em-ordem
-void imprimirArvore(node *raiz) {
+void imprimirArvoreR(node *raiz) {
   if (raiz == NULL) return;
 
-  imprimirArvore(raiz->esq);
+  imprimirArvoreR(raiz->esq);
   imprimirNode(raiz);
-  imprimirArvore(raiz->dir);
+  imprimirArvoreR(raiz->dir);
 }
 
 void criarNode(node **ref, contato c) {
@@ -30,7 +30,7 @@ void criarNode(node **ref, contato c) {
   (*ref)->dir = NULL;
 }
 
-void inserirNodeAux(node **raiz, contato c) {
+void inserirNodeAuxR(node **raiz, contato c) {
   if ( *raiz == NULL ) { // caso node atual esteja vazio, insira novo contato
     criarNode(raiz, c);
     return;
@@ -38,18 +38,18 @@ void inserirNodeAux(node **raiz, contato c) {
 
   // use recursão para executar essa função novamente
   // dessa vez usando o node filho da esquerda ou da direita como raiz
-  inserirNodeAux(strcmp(c.nome, (*raiz)->contato.nome) < 0 ? &((*raiz)->esq) : &((*raiz)->dir), c);
+  inserirNodeAuxR(strcmp(c.nome, (*raiz)->contato.nome) < 0 ? &((*raiz)->esq) : &((*raiz)->dir), c);
 }
 
 // percorre a árvore p/ encontrar o node folha em que adicionar o novo contato
-void inserirNode(node **raiz, contato c) {
+void inserirNodeR(node **raiz, contato c) {
   // a primeira letra dos nomes dos contatos devem sempre estar em maiúscula
   if (c.nome[0] >= 97 && c.nome[0] <= 122) c.nome[0] -= 32;
 
   // os nodes de árvores binárias de busca devem ser únicos
-  if (procurarNode(*raiz, c.nome)) return;
+  if (procurarNodeR(*raiz, c.nome)) return;
 
-  inserirNodeAux(raiz, c);
+  inserirNodeAuxR(raiz, c);
 }
 
 node **retornarDescendenteMaisADireita(node **raiz) {
@@ -59,7 +59,7 @@ node **retornarDescendenteMaisADireita(node **raiz) {
 }
 
 // percorre a árvore p/ encontar o node com o exato nome e removê-lo
-void removerNode(node **raiz, char *nome) {
+void removerNodeR(node **raiz, char *nome) {
   if (*raiz == NULL) return;
 
   int cmp = strcmp(nome, (*raiz)->contato.nome);
@@ -106,32 +106,31 @@ void removerNode(node **raiz, char *nome) {
     return;
   }
 
-  removerNode(cmp < 0 ? &(*raiz)->esq : &(*raiz)->dir, nome);
+  removerNodeR(cmp < 0 ? &(*raiz)->esq : &(*raiz)->dir, nome);
 }
 
 // percorre toda a árvore em pré-ordem p/ calcular o número total de nodes
-int contarNodes(node *raiz) {
+int contarNodesR(node *raiz) {
   if (raiz == NULL) return 0;
 
-  return 1 + contarNodes(raiz->esq) + contarNodes(raiz->dir);
+  return 1 + contarNodesR(raiz->esq) + contarNodesR(raiz->dir);
 }
 
 // percorre a árvore p/ encontrar o contato com o exato nome e retorná-lo
-node *procurarNode(node *raiz, char *nome) {
+node *procurarNodeR(node *raiz, char *nome) {
   if (raiz == NULL) return NULL;
 
   int cmp = strcmp(nome, raiz->contato.nome);
 
   if ( cmp == 0 ) return raiz;
-  return procurarNode(cmp < 0 ? raiz->esq : raiz->dir, nome);
+  return procurarNodeR(cmp < 0 ? raiz->esq : raiz->dir, nome);
 }
 
 // percorre a árvore em pós-ordem p/ deletar todos os nodes
-void destruirArvore(node **raiz) {
+void destruirArvoreR(node **raiz) {
   if (*raiz == NULL) return;
 
-  destruirArvore(&(*raiz)->esq);
-  destruirArvore(&(*raiz)->dir);
-  free(*raiz);
-  *raiz = NULL;
+  destruirArvoreR(&(*raiz)->esq);
+  destruirArvoreR(&(*raiz)->dir);
+  free(*raiz); *raiz = NULL;
 }

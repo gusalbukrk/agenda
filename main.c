@@ -20,17 +20,17 @@ int main() {
   //      Gabriel     Restaurante
   //   Bianca  João  Pedro   Sofia
   //  Ana
-  inserirNode(&raiz, lucas);
-  inserirNode(&raiz, gabriel);
-  inserirNode(&raiz, bianca);
-  inserirNode(&raiz, restaurante);
-  inserirNode(&raiz, ana);
-  inserirNode(&raiz, joao);
-  inserirNode(&raiz, pedro);
-  inserirNode(&raiz, sofia);
+  inserirNodeR(&raiz, lucas);
+  inserirNodeR(&raiz, gabriel);
+  inserirNodeR(&raiz, bianca);
+  inserirNodeR(&raiz, restaurante);
+  inserirNodeR(&raiz, ana);
+  inserirNodeR(&raiz, joao);
+  inserirNodeR(&raiz, pedro);
+  inserirNodeR(&raiz, sofia);
 
   printf("TESTE: contarNodes\n");
-  printf("%d nodes\n", contarNodes(raiz));
+  printf("%d nodes\n", contarNodesR(raiz));
 
   printf("\nTESTE: imprimirNode\n");
   imprimirNode(raiz);
@@ -43,38 +43,38 @@ int main() {
   imprimirNode(raiz->dir->dir);
 
   printf("\nTESTE: imprimirArvore\n");
-  imprimirArvore(raiz);
+  imprimirArvoreR(raiz);
 
   printf("\nTESTE: removerNode (node sem filhos)\n");
   imprimirNode(raiz->dir); // pai do node a ser removido
   imprimirNode(raiz->dir->dir); // node a ser removido
-  removerNode(&raiz, "Sofia S.");
+  removerNodeR(&raiz, "Sofia S.");
   imprimirNode(raiz->dir); // a propriedade dir desse node agora está NULL
   imprimirNode(raiz->dir->dir);
 
   printf("\nTESTE: removerNode (node com 1 filho)\n");
   imprimirNode(raiz->esq); // pai do node a ser removido
   imprimirNode(raiz->esq->esq); // node a ser removido
-  removerNode(&raiz, "Bianca");
+  removerNodeR(&raiz, "Bianca");
   imprimirNode(raiz->esq); // a propriedade dir desse node agora está NULL
   imprimirNode(raiz->esq->esq);
 
   printf("\nTESTE: removerNode (node com 2 filhos)\n");
   imprimirNode(raiz->esq); // pai do node que vai substituir o node a ser removido
   imprimirNode(raiz); // node a ser removido
-  removerNode(&raiz, "Lucas");
+  removerNodeR(&raiz, "Lucas");
   imprimirNode(raiz->esq); // a propriedade dir desse node agora está NULL
   imprimirNode(raiz); // novo node que está no lugar do node que foi removido
 
   printf("\nTESTE: procurarNode\n");
-  imprimirNode(procurarNode(raiz, "Gabriel"));
-  imprimirNode(procurarNode(raiz, "Pedro da Silva"));
+  imprimirNode(procurarNodeR(raiz, "Gabriel"));
+  imprimirNode(procurarNodeR(raiz, "Pedro da Silva"));
 
   printf("\nTESTE: destruirArvore\n");
-  printf("%d nodes\n", contarNodes(raiz));
+  printf("%d nodes\n", contarNodesR(raiz));
   imprimirNode(raiz);
-  destruirArvore(&raiz);
-  printf("%d nodes\n", contarNodes(raiz));
+  destruirArvoreR(&raiz);
+  printf("%d nodes\n", contarNodesR(raiz));
   imprimirNode(raiz);
 
   return 0;

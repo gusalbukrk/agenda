@@ -14,11 +14,11 @@
   } node;
 
   void imprimirNode(node *n);
-  void imprimirArvore(node *raiz);
-  void inserirNode(node **raiz, contato c);
-  void removerNode(node **raiz, char *nome);
-  node *procurarNode(node *raiz, char *nome);
-  int contarNodes(node *raiz);
-  void destruirArvore(node **raiz);
+  void imprimirArvoreR(node *raiz);
+  void inserirNodeR(node **raiz, contato c);
+  void removerNodeR(node **raiz, char *nome);
+  node *procurarNodeR(node *raiz, char *nome);
+  int contarNodesR(node *raiz);
+  void destruirArvoreR(node **raiz);
 
 #endif
