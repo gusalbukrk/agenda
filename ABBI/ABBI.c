@@ -118,12 +118,6 @@ void inserirNodeI(node **raiz, contato c) {
   criarNode(n, c);
 }
 
-node **retornarDescendenteMaisADireita(node **raiz) {
-  if ((*raiz)->dir == NULL) return raiz;
-
-  return retornarDescendenteMaisADireita(&(*raiz)->dir);
-}
-
 void removerNodeI(node **raiz, char *nome) {
   if (raiz == NULL) return;
 
@@ -147,7 +141,8 @@ void removerNodeI(node **raiz, char *nome) {
   // - o node mais à direita da sub-árvore do filho da esquerda
   // - o node mais à esquerda da sub-árvore do filho da direita
   } else if ( (*n)->esq != NULL && (*n)->dir != NULL ) {
-    node **d = retornarDescendenteMaisADireita(&(*n)->esq);
+    node **d = &(*n)->esq;
+    while ( (*d)->dir != NULL ) d = &((*d)->dir);
 
     node *tmp = *n; // salva raiz em uma variável temporária
     *n = *d; // substitui raiz por o descendente mais à direita do seu filho esquerdo
