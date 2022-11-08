@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "ABBI.h"
-#include "stack.h"
+#include "ABBI/ABBI.h"
 
 int main() {
   contato ana = { "Ana Pereira", "99261-9761" };
