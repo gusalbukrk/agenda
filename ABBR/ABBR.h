@@ -1,5 +1,5 @@
 #ifndef ABBR
-#define ABBR
+#define ABBR // Árvore Binária de Busca - recursiva
 
   typedef struct Contato {
     char nome[50];

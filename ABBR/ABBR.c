@@ -30,7 +30,7 @@ void criarNode(node **ref, contato c) {
   (*ref)->dir = NULL;
 }
 
-void inserirNodeAuxR(node **raiz, contato c) {
+void inserirNodeAux(node **raiz, contato c) {
   if ( *raiz == NULL ) { // caso node atual esteja vazio, insira novo contato
     criarNode(raiz, c);
     return;
@@ -38,7 +38,7 @@ void inserirNodeAuxR(node **raiz, contato c) {
 
   // use recursão para executar essa função novamente
   // dessa vez usando o node filho da esquerda ou da direita como raiz
-  inserirNodeAuxR(strcmp(c.nome, (*raiz)->contato.nome) < 0 ? &((*raiz)->esq) : &((*raiz)->dir), c);
+  inserirNodeAux(strcmp(c.nome, (*raiz)->contato.nome) < 0 ? &((*raiz)->esq) : &((*raiz)->dir), c);
 }
 
 // percorre a árvore p/ encontrar o node folha em que adicionar o novo contato
@@ -49,7 +49,7 @@ void inserirNodeR(node **raiz, contato c) {
   // os nodes de árvores binárias de busca devem ser únicos
   if (procurarNodeR(*raiz, c.nome)) return;
 
-  inserirNodeAuxR(raiz, c);
+  inserirNodeAux(raiz, c);
 }
 
 node **retornarDescendenteMaisADireita(node **raiz) {

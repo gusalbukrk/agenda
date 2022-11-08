@@ -1,5 +1,5 @@
 #ifndef ABBI
-#define ABBI
+#define ABBI // Árvore Binária de Busca - iterativa
 
   typedef struct Contato {
     char nome[50];
