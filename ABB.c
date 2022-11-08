@@ -3,6 +3,71 @@
 #include <string.h>
 
 #include "ABB.h"
+#include "stack.h"
+
+void preorder(node *raiz, void callback(node *n)) {
+  if (raiz == NULL) return;
+
+  stack *s = NULL; initStack(&s);
+  node *atual = raiz, *prevNode = NULL;
+
+  while ( s->quant != 0 || atual != NULL ) {
+    if (atual != NULL) {
+      callback(atual);
+      push(&s, atual);
+      atual = atual->esq;
+    } else {
+      prevNode = pop(&s);
+      atual = prevNode->dir;
+    }
+  }
+}
+
+void inorder(node *raiz, void callback(node *n)) {
+  if (raiz == NULL) return;
+
+  stack *s = NULL; initStack(&s);
+  node *atual = raiz;
+
+  while ( s->quant != 0 || atual != NULL ) {
+    if (atual != NULL) {
+      push(&s, atual);
+      atual = atual->esq;
+    } else {
+      atual = pop(&s);
+      callback(atual);
+      atual = atual->dir;
+    }
+  }
+}
+
+void postorder(node *raiz, void callback(node *n)) {
+  if (raiz == NULL) return;
+
+  stack *s = NULL; initStack(&s);
+  stack *dir = NULL; initStack(&dir);
+  node *atual = raiz;
+
+  while ( s->quant != 0 || atual != NULL ) {
+    if (atual != NULL) {
+      if (atual->dir != NULL) push(&dir, atual->dir);
+      push(&s, atual);
+      atual = atual->esq;
+    } else {
+      atual = &(s->values[0]);
+      if (
+        dir->quant != 0 &&
+        ( atual->dir != NULL && (strcmp(atual->dir->contato.nome, dir->values[0].contato.nome) == 0) )
+      ) {
+        atual = pop(&dir);
+      } else {
+        callback(atual);
+        pop(&s);
+        atual = NULL;
+      }
+    }
+  }
+}
 
 void imprimirNode(node *n) {
   if (n == NULL) {
@@ -13,14 +78,23 @@ void imprimirNode(node *n) {
   printf("(%p) = { %s, %s }, %p, %p\n", n, n->contato.nome, n->contato.telefone, n->esq, n->dir);
 }
 
-// imprime nodes em ordem
+// imprime nodes em-ordem
 void imprimirArvore(node *raiz) {
   if (raiz == NULL) return;
 
-  imprimirArvore(raiz->esq);
-  imprimirNode(raiz);
-  // printf("%s: %s\n", raiz->contato.nome, raiz->contato.telefone);
-  imprimirArvore(raiz->dir);
+  stack *s = NULL; initStack(&s);
+  node *atual = raiz;
+
+  while ( s->quant != 0 || atual != NULL ) {
+    if (atual != NULL) {
+      push(&s, atual);
+      atual = atual->esq;
+    } else {
+      atual = pop(&s);
+      imprimirNode(atual);
+      atual = atual->dir;
+    }
+  }
 }
 
 void criarNode(node **ref, contato c) {
@@ -30,28 +104,6 @@ void criarNode(node **ref, contato c) {
   (*ref)->esq = NULL;
   (*ref)->dir = NULL;
 }
-
-// void inserirNodeAux(node **raiz, contato c) {
-//   if ( *raiz == NULL ) { // caso node atual esteja vazio, insira novo contato
-//     criarNode(raiz, c);
-//     return;
-//   }
-
-//   // use recursão para executar essa função novamente
-//   // dessa vez usando o node filho da esquerda ou da direita como raiz
-//   inserirNodeAux(strcmp(c.nome, (*raiz)->contato.nome) < 0 ? &((*raiz)->esq) : &((*raiz)->dir), c);
-// }
-
-// // percorre a árvore p/ encontrar o node folha em que adicionar o novo contato
-// void inserirNode(node **raiz, contato c) {
-//   // a primeira letra dos nomes dos contatos devem sempre estar em maiúscula
-//   if (c.nome[0] >= 97 && c.nome[0] <= 122) c.nome[0] -= 32;
-
-//   // os nodes de árvores binárias de busca devem ser únicos
-//   if (procurarNode(*raiz, c.nome)) return;
-
-//   inserirNodeAux(raiz, c);
-// }
 
 void inserirNode(node **raiz, contato c) {
   if (c.nome[0] >= 97 && c.nome[0] <= 122) c.nome[0] -= 32;
@@ -71,57 +123,6 @@ node **retornarDescendenteMaisADireita(node **raiz) {
 
   return retornarDescendenteMaisADireita(&(*raiz)->dir);
 }
-
-// // percorre a árvore p/ encontar o node com o exato nome e removê-lo
-// void removerNode(node **raiz, char *nome) {
-//   if (*raiz == NULL) return;
-
-//   int cmp = strcmp(nome, (*raiz)->contato.nome);
-
-//   if (cmp == 0) { // caso raiz é o contato a ser removido
-
-//     // caso node a ser removido é um node folha, simplesmente remova-o
-//     if ( (*raiz)->esq == NULL && (*raiz)->dir == NULL ) {
-//       free(*raiz);
-//       *raiz = NULL;
-
-//     // caso node a ser removido possua 2 filhos
-//     // substitua-o por o seu node predecessor ou sucessor em ordem, ou seja:
-//     // - o node mais à direita da sub-árvore do filho da esquerda
-//     // - o node mais à esquerda da sub-árvore do filho da direita
-//     } else if ( (*raiz)->esq != NULL && (*raiz)->dir != NULL ) {
-//       node **n = retornarDescendenteMaisADireita(&(*raiz)->esq);
-
-//       node *tmp = *raiz; // salva raiz em uma variável temporária
-//       *raiz = *n; // substitui raiz por o descendente mais à direita do seu filho esquerdo
-
-//       if ( *raiz != tmp->esq ) {
-//         (*raiz)->esq = tmp->esq;
-//       }
-
-//       if ( *raiz != tmp->dir ) {
-//         (*raiz)->dir = tmp->dir;
-//       }
-
-//       *n = NULL; // caso contrário a nova raiz ainda será filho do seu antigo pai
-
-//       free(tmp);
-//       tmp = NULL;
-
-//     // caso node a ser removido possua apenas um filho — esq ou dir
-//     // substitua o node a ser removido por o seu único filho
-//     } else {
-//       node **child = (*raiz)->esq != NULL ? &(*raiz)->esq : &(*raiz)->dir;
-
-//       free(*raiz);
-//       *raiz = *child;
-//     }
-
-//     return;
-//   }
-
-//   removerNode(cmp < 0 ? &(*raiz)->esq : &(*raiz)->dir, nome);
-// }
 
 void removerNode(node **raiz, char *nome) {
   if (raiz == NULL) return;
@@ -175,21 +176,29 @@ void removerNode(node **raiz, char *nome) {
 }
 
 // percorre toda a árvore p/ calcular o número total de nodes
+// a ordem em que a árvore será percorrida é irrelevante, usaremos pré-ordem
+// pois as alternativas (em-ordem e pós-ordem) já foram utilizadas em outras funções
 int contarNodes(node *raiz) {
   if (raiz == NULL) return 0;
 
-  return 1 + contarNodes(raiz->esq) + contarNodes(raiz->dir);
+  stack *s = NULL; initStack(&s);
+  node *atual = raiz, *prevNode = NULL;
+
+  int contador = 0;
+
+  while ( s->quant != 0 || atual != NULL ) {
+    if (atual != NULL) {
+      contador += 1;
+      push(&s, atual);
+      atual = atual->esq;
+    } else {
+      prevNode = pop(&s);
+      atual = prevNode->dir;
+    }
+  }
+
+  return contador;
 }
-
-// // percorre a árvore p/ encontrar o contato com o exato nome e retorná-lo
-// node *procurarNode(node *raiz, char *nome) {
-//   if (raiz == NULL) return NULL;
-
-//   int cmp = strcmp(nome, raiz->contato.nome);
-
-//   if ( cmp == 0 ) return raiz;
-//   return procurarNode(cmp < 0 ? raiz->esq : raiz->dir, nome);
-// }
 
 node *procurarNode(node *raiz, char *nome) {
   if (raiz == NULL) return NULL;
@@ -211,8 +220,27 @@ node *procurarNode(node *raiz, char *nome) {
 void destruirArvore(node **raiz) {
   if (*raiz == NULL) return;
 
-  destruirArvore(&(*raiz)->esq);
-  destruirArvore(&(*raiz)->dir);
-  free(*raiz);
-  *raiz = NULL;
+  stack *s = NULL; initStack(&s);
+  stack *dir = NULL; initStack(&dir);
+  node *atual = *raiz;
+
+  while ( s->quant != 0 || atual != NULL ) {
+    if (atual != NULL) {
+      if (atual->dir != NULL) push(&dir, atual->dir);
+      push(&s, atual);
+      atual = atual->esq;
+    } else {
+      atual = &(s->values[0]);
+      if (
+        dir->quant != 0 &&
+        ( atual->dir != NULL && (strcmp(atual->dir->contato.nome, dir->values[0].contato.nome) == 0) )
+      ) {
+        atual = pop(&dir);
+      } else {
+        free(*raiz); *raiz = NULL;
+        pop(&s);
+        atual = NULL;
+      }
+    }
+  }
 }
