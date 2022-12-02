@@ -1,80 +1,103 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "ABB.h"
 
-int main() {
-  contato ana = { "Ana Pereira", "99261-9761" };
-  contato bianca = { "Bianca", "(61) 99281-7747" };
-  contato gabriel = { "Gabriel", "981123773" };
-  contato joao = { "João Guilherme", "(64) 2352-9821" };
-  contato lucas = { "Lucas", "+55 (11) 3213-7698" };
-  contato pedro = { "Pedro da Silva", "3441-9822" };
-  contato restaurante = { "Restaurante", "(64) 3411-2388" };
-  contato sofia = { "Sofia S.", "(11) 99268-9821" };
+// https://www.geeksforgeeks.org/problem-with-using-fgets-gets-scanf-after-scanf-in-c/
+void flush() {
+  char c;
+  while((c = getchar()) != '\n' && c != EOF) {}
+}
 
+int main() {
   node *raiz = NULL;
 
-  //             Lucas
-  //      Gabriel     Restaurante
-  //   Bianca  João  Pedro   Sofia
-  //  Ana
-  inserirNode(&raiz, lucas);
-  inserirNode(&raiz, gabriel);
-  inserirNode(&raiz, bianca);
-  inserirNode(&raiz, restaurante);
-  inserirNode(&raiz, ana);
-  inserirNode(&raiz, joao);
-  inserirNode(&raiz, pedro);
-  inserirNode(&raiz, sofia);
+  while (true) {
 
-  printf("TESTE: contarNodes\n");
-  printf("%d nodes\n", contarNodes(raiz));
+    printf("1 - Inserir contato\n");
+    printf("2 - Excluir contato\n");
+    printf("3 - Listar contatos\n");
+    printf("4 - Procurar contato\n");
+    printf("5 - Calcular tamanho da agenda\n");
+    printf("6 - Destruir agenda\n");
+    printf("0 - Sair\n");
+    printf("\n");
 
-  printf("\nTESTE: imprimirNode\n");
-  imprimirNode(raiz);
-  imprimirNode(raiz->esq);
-  imprimirNode(raiz->esq->esq);
-  imprimirNode(raiz->esq->dir);
-  imprimirNode(raiz->esq->esq->esq);
-  imprimirNode(raiz->dir);
-  imprimirNode(raiz->dir->esq);
-  imprimirNode(raiz->dir->dir);
+    int option = 0;
+    printf("Opção: "); scanf("%d", &option); flush(); printf("\n");
 
-  printf("\nTESTE: imprimirArvore\n");
-  imprimirArvore(raiz);
+    switch (option) {
+      case 1 :
+      {
+        contato c;
+        printf("Nome: "); scanf("%[^\n]s", c.nome); flush();
+        printf("Telefone: "); scanf("%[^\n]s", c.telefone); flush();
 
-  printf("\nTESTE: removerNode (node sem filhos)\n");
-  imprimirNode(raiz->dir); // pai do node a ser removido
-  imprimirNode(raiz->dir->dir); // node a ser removido
-  removerNode(&raiz, "Sofia S.");
-  imprimirNode(raiz->dir); // a propriedade dir desse node agora está NULL
-  imprimirNode(raiz->dir->dir);
+        inserirNode(&raiz, c);
 
-  printf("\nTESTE: removerNode (node com 1 filho)\n");
-  imprimirNode(raiz->esq); // pai do node a ser removido
-  imprimirNode(raiz->esq->esq); // node a ser removido
-  removerNode(&raiz, "Bianca");
-  imprimirNode(raiz->esq); // a propriedade dir desse node agora está NULL
-  imprimirNode(raiz->esq->esq);
+        break;
+      }
 
-  printf("\nTESTE: removerNode (node com 2 filhos)\n");
-  imprimirNode(raiz->esq); // pai do node que vai substituir o node a ser removido
-  imprimirNode(raiz); // node a ser removido
-  removerNode(&raiz, "Lucas");
-  imprimirNode(raiz->esq); // a propriedade dir desse node agora está NULL
-  imprimirNode(raiz); // novo node que está no lugar do node que foi removido
+      case 2:
+      {
+        char nome[50];
+        printf("Nome: "); scanf("%[^\n]s", nome); flush();
 
-  printf("\nTESTE: procurarNode\n");
-  imprimirNode(procurarNode(raiz, "Gabriel"));
-  imprimirNode(procurarNode(raiz, "Pedro da Silva"));
+        removerNode(&raiz, nome);
 
-  printf("\nTESTE: destruirArvore\n");
-  printf("%d nodes\n", contarNodes(raiz));
-  imprimirNode(raiz);
-  destruirArvore(&raiz);
-  printf("%d nodes\n", contarNodes(raiz));
-  imprimirNode(raiz);
+        break;
+      }
 
-  return 0;
+      case 3:
+      {
+        if (raiz == NULL) printf("\033[A");
+        else imprimirArvore(raiz);
+
+        break;
+      }
+
+      case 4:
+      {
+        char nome[50];
+        printf("Nome: "); scanf("%[^\n]s", nome); flush();
+
+        node *n = procurarNode(raiz, nome);
+
+        if ( n != NULL) {
+          printf("\n");
+          imprimirNode(n);
+        }
+
+        break;
+      }
+
+      case 5:
+      {
+        printf("quant. de nós: %d\n", contarNodes(raiz));
+
+        break;
+      }
+
+      case 6:
+      {
+        destruirArvore(&raiz);
+
+        break;
+      }
+
+      case 0:
+      {
+        return 0;
+        break;
+      }
+
+      default:
+      {
+        printf("ERRO: opção inválida\n");
+      }
+    }
+
+    printf("\n");
+  }
 }

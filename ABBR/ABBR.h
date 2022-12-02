@@ -3,7 +3,7 @@
 
   typedef struct Contato {
     char nome[50];
-    char telefone[20];
+    char telefone[30];
   } contato;
 
   // estrutura dos nodes da Árvore Binária de Busca (ABB)
