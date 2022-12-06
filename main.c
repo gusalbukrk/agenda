@@ -25,14 +25,21 @@ int main() {
     printf("\n");
 
     int option = 0;
-    printf("Opção: "); scanf("%d", &option); flush(); printf("\n");
+    printf("Opção: ");
+    if (scanf("%d", &option)) {}
+    flush(); printf("\n");
 
     switch (option) {
       case 1 :
       {
         contato c;
-        printf("Nome: "); scanf("%[^\n]s", c.nome); flush();
-        printf("Telefone: "); scanf("%[^\n]s", c.telefone); flush();
+        printf("Nome: ");
+        if (scanf("%[^\n]s", c.nome)) {}
+        flush();
+        
+        printf("Telefone: ");
+        if (scanf("%[^\n]s", c.telefone)) {}
+        flush();
 
         inserirNode(&raiz, c);
 
@@ -42,7 +49,9 @@ int main() {
       case 2:
       {
         char nome[50];
-        printf("Nome: "); scanf("%[^\n]s", nome); flush();
+        printf("Nome: ");
+        if (scanf("%[^\n]s", nome)) {}
+        flush();
 
         removerNode(&raiz, nome);
 
@@ -60,7 +69,9 @@ int main() {
       case 4:
       {
         char nome[50];
-        printf("Nome: "); scanf("%[^\n]s", nome); flush();
+        printf("Nome: ");
+        if (scanf("%[^\n]s", nome)) {}
+        flush();
 
         node *n = procurarNode(raiz, nome);
 
